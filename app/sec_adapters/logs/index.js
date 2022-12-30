@@ -1,6 +1,7 @@
 const dbConfig = require("../../config/db.js");
 
 const Sequelize = require("sequelize");
+// TODO: init adapter from server.js with config
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,

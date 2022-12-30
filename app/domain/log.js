@@ -2,11 +2,14 @@ const Log = require("../sec_adapters/logs");
 // TODO: sec adapters should handle the Op
 const Op = require("sequelize").Op;
 
-// TODO: Log as a prop of LogContext
 // TODO: should throw or return the result, and pri adapter should send the rest message
 
-LogContext = {
-  create: (req, res) => {
+class LogContext {
+  constructor(logAdapter) {
+    this.logAdapter = logAdapter;
+  }
+
+  create = (req, res) => {
     if (!req.body.message) {
       res.status(400).send({
         message: "Message can not be empty!",
@@ -19,7 +22,8 @@ LogContext = {
       level: req.body.level || "INFO",
     };
 
-    Log.create(log)
+    this.logAdapter
+      .create(log)
       .then((data) => {
         res.send(data);
       })
@@ -28,13 +32,14 @@ LogContext = {
           message: err.message || "Some error occurred while creating the Log.",
         });
       });
-  },
+  };
 
-  findAll: (req, res) => {
+  findAll = (req, res) => {
     const level = req.query.level;
     var condition = level ? { level: { [Op.eq]: level } } : null;
 
-    Log.findAll({ where: condition })
+    this.logAdapter
+      .findAll({ where: condition })
       .then((data) => {
         res.send(data);
       })
@@ -43,13 +48,14 @@ LogContext = {
           message: err.message || "Some error occurred while retrieving logs.",
         });
       });
-  },
+  };
 
-  deleteAll: (req, res) => {
-    Log.destroy({
-      where: {},
-      truncate: false,
-    })
+  deleteAll = (req, res) => {
+    this.logAdapter
+      .destroy({
+        where: {},
+        truncate: false,
+      })
       .then((nums) => {
         res.send({ message: `${nums} Logs were deleted successfully!` });
       })
@@ -59,7 +65,7 @@ LogContext = {
             err.message || "Some error occurred while removing all logs.",
         });
       });
-  },
-};
+  };
+}
 
 module.exports = LogContext;

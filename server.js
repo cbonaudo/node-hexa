@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+const LogContext = require("./app/domain/log.js");
+
 const corsOptions = {
   origin: "http://localhost:8081",
 };
@@ -13,7 +15,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const logContext = require("./app/domain/log.js");
+const logAdapter = require("./app/sec_adapters/logs");
+const logContext = new LogContext(logAdapter);
 
 require("./app/pri_adapters/rest/log")(app, logContext);
 

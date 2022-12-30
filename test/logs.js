@@ -25,7 +25,7 @@ describe("Logs", () => {
         .request(server)
         .get("/api/logs")
         .end((err, res) => {
-          console.log(res.body);
+          // console.log(res.body);
           res.should.have.status(200);
           res.body.should.be.a("array");
           res.body.length.should.be.eql(0);
@@ -92,6 +92,7 @@ describe("Logs", () => {
         .post("/api/logs")
         .send(log)
         .end((err, res) => {
+          // console.log(res);
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.should.have.property("message");
