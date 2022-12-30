@@ -13,7 +13,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-require("./app/pri_adapters/rest/log")(app);
+const logContext = require("./app/domain/log.js");
+
+require("./app/pri_adapters/rest/log")(app, logContext);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}.`);

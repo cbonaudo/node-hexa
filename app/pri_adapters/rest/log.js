@@ -1,13 +1,11 @@
-module.exports = (app) => {
-  const logs = require("../../domain/log.js");
-
+module.exports = (app, logContext) => {
   const router = require("express").Router();
 
-  router.post("/", logs.create);
+  router.post("/", logContext.create);
 
-  router.get("/", logs.findAll);
+  router.get("/", logContext.findAll);
 
-  router.delete("/", logs.deleteAll);
+  router.delete("/", logContext.deleteAll);
 
   app.use("/api/logs", router);
 };
