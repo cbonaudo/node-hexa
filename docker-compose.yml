@@ -1,0 +1,11 @@
+version: "3"
+services:
+  test-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: testdb
+      POSTGRES_PASSWORD: iopassword
+    ports:
+      - "5432:5432"
