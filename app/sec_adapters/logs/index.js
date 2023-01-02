@@ -1,25 +1,11 @@
 const dbConfig = require("../../config/db.js");
 
 const Sequelize = require("sequelize");
-// TODO: init adapter from server.js with config
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  dialect: dbConfig.dialect,
-  operatorsAliases: false,
+const { initSequelize } = require("./sqlInit");
 
-  logging: false,
+const db = initSequelize(dbConfig);
 
-  pool: {
-    max: dbConfig.pool.max,
-    min: dbConfig.pool.min,
-    acquire: dbConfig.pool.acquire,
-    idle: dbConfig.pool.idle,
-  },
-});
-
-const db = { Sequelize, sequelize };
-
-db.logs = sequelize.define("log", {
+db.logs = db.sequelize.define("log", {
   message: {
     type: Sequelize.STRING,
   },
