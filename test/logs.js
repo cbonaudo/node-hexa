@@ -5,17 +5,16 @@ let chaiHttp = require("chai-http");
 let server = require("../server");
 let should = chai.should();
 
-const db = require("../app/sec_adapters/logs");
-const Log = db;
+const SQLLogAdapter = require("../app/sec_adapters/logs");
 
 chai.use(chaiHttp);
 
+const LOGGING = false;
+
 describe("Logs", () => {
   beforeEach(async (done) => {
-    await Log.destroy({
-      where: {},
-      truncate: false,
-    });
+    // TODO: have a test init that will initialize the server, so we can manipulate the logAdapter directly
+    await SQLLogAdapter.deleteAll();
     done();
   });
 
@@ -25,7 +24,7 @@ describe("Logs", () => {
         .request(server)
         .get("/api/logs")
         .end((err, res) => {
-          // console.log(res.body);
+          if (LOGGING) console.log(res);
           res.should.have.status(200);
           res.body.should.be.a("array");
           res.body.length.should.be.eql(0);
@@ -33,14 +32,15 @@ describe("Logs", () => {
         });
     });
     it("it should GET all logs", async (done) => {
-      await Log.create({ message: "One log" });
-      await Log.create({ message: "Two log" });
-      await Log.create({ message: "Three log" });
+      await SQLLogAdapter.create({ message: "One log" });
+      await SQLLogAdapter.create({ message: "Two log" });
+      await SQLLogAdapter.create({ message: "Three log" });
 
       chai
         .request(server)
         .get("/api/logs")
         .end((err, res) => {
+          if (LOGGING) console.log(res);
           res.should.have.status(200);
           res.body.should.be.a("array");
           res.body.length.should.be.eql(3);
@@ -48,14 +48,15 @@ describe("Logs", () => {
         });
     });
     it("it should GET only warn logs", async (done) => {
-      await Log.create({ message: "One log" });
-      await Log.create({ message: "Two log", level: "WARN" });
-      await Log.create({ message: "Three log", level: "WARN" });
+      await SQLLogAdapter.create({ message: "One log" });
+      await SQLLogAdapter.create({ message: "Two log", level: "WARN" });
+      await SQLLogAdapter.create({ message: "Three log", level: "WARN" });
 
       chai
         .request(server)
         .get("/api/logs?level=WARN")
         .end((err, res) => {
+          if (LOGGING) console.log(res);
           res.should.have.status(200);
           res.body.should.be.a("array");
           res.body.length.should.be.eql(2);
@@ -74,6 +75,7 @@ describe("Logs", () => {
         .post("/api/logs")
         .send(log)
         .end((err, res) => {
+          if (LOGGING) console.log(res);
           res.should.have.status(400);
           res.body.should.be.a("object");
           res.body.should.have.property("message");
@@ -92,7 +94,7 @@ describe("Logs", () => {
         .post("/api/logs")
         .send(log)
         .end((err, res) => {
-          // console.log(res);
+          if (LOGGING) console.log(res);
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.should.have.property("message");
@@ -109,6 +111,7 @@ describe("Logs", () => {
         .post("/api/logs")
         .send(log)
         .end((err, res) => {
+          if (LOGGING) console.log(res);
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.should.have.property("level");
@@ -125,6 +128,7 @@ describe("Logs", () => {
         .request(server)
         .delete("/api/logs")
         .end((err, res) => {
+          if (LOGGING) console.log(res);
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.should.have.property("message");
@@ -133,13 +137,14 @@ describe("Logs", () => {
         });
     });
     it("it should delete all logs", async (done) => {
-      await Log.create({ message: "One log that won't stay long" });
-      await Log.create({ message: "Two log that won't stay long" });
+      await SQLLogAdapter.create({ message: "One log that won't stay long" });
+      await SQLLogAdapter.create({ message: "Two log that won't stay long" });
 
       chai
         .request(server)
         .delete("/api/logs")
         .end((err, res) => {
+          if (LOGGING) console.log(res);
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.should.have.property("message");
