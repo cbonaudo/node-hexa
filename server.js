@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const LogContext = require("./app/domain/log.js");
+const LogContext = require("./app/domain/contexts/log.js");
 const SQLLogAdapter = require("./app/sec_adapters/logs");
 const initLogRoutes = require("./app/pri_adapters/rest/log");
 
