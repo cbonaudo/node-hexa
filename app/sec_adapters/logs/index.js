@@ -47,4 +47,4 @@ class SQLLogAdapter {
   };
 }
 
-module.exports = new SQLLogAdapter();
+module.exports = SQLLogAdapter;

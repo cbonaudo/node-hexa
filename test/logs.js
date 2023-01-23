@@ -2,7 +2,7 @@ process.env.NODE_ENV = "test";
 
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-let { app: server, SQLLogAdapter } = require("../server");
+let { app: server, sqlLogAdapter } = require("../server");
 let should = chai.should();
 
 chai.use(chaiHttp);
@@ -11,7 +11,7 @@ const LOGGING = false;
 
 describe("Logs", () => {
   beforeEach(async (done) => {
-    await SQLLogAdapter.deleteAll();
+    await sqlLogAdapter.deleteAll();
     done();
   });
 
@@ -29,9 +29,9 @@ describe("Logs", () => {
         });
     });
     it("it should GET all logs", async (done) => {
-      await SQLLogAdapter.create({ message: "One log" });
-      await SQLLogAdapter.create({ message: "Two log" });
-      await SQLLogAdapter.create({ message: "Three log" });
+      await sqlLogAdapter.create({ message: "One log" });
+      await sqlLogAdapter.create({ message: "Two log" });
+      await sqlLogAdapter.create({ message: "Three log" });
 
       chai
         .request(server)
@@ -45,9 +45,9 @@ describe("Logs", () => {
         });
     });
     it("it should GET only warn logs", async (done) => {
-      await SQLLogAdapter.create({ message: "One log" });
-      await SQLLogAdapter.create({ message: "Two log", level: "WARN" });
-      await SQLLogAdapter.create({ message: "Three log", level: "WARN" });
+      await sqlLogAdapter.create({ message: "One log" });
+      await sqlLogAdapter.create({ message: "Two log", level: "WARN" });
+      await sqlLogAdapter.create({ message: "Three log", level: "WARN" });
 
       chai
         .request(server)
@@ -134,8 +134,8 @@ describe("Logs", () => {
         });
     });
     it("it should delete all logs", async (done) => {
-      await SQLLogAdapter.create({ message: "One log that won't stay long" });
-      await SQLLogAdapter.create({ message: "Two log that won't stay long" });
+      await sqlLogAdapter.create({ message: "One log that won't stay long" });
+      await sqlLogAdapter.create({ message: "Two log that won't stay long" });
 
       chai
         .request(server)
