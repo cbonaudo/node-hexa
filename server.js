@@ -2,9 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const LogContext = require("./app/domain/contexts/log.js");
-const SQLLogAdapter = require("./app/sec_adapters/logs");
-const initLogRoutes = require("./app/pri_adapters/rest/log");
+const LogContext = require("./app/domain/controller/log.js");
+const SQLLogAdapter = require("./app/models/logs");
+const initLogRoutes = require("./app/routes/rest/log");
 
 const corsOptions = {
   origin: "http://localhost:8081",
