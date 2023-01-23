@@ -2,10 +2,8 @@ process.env.NODE_ENV = "test";
 
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-let server = require("../server");
+let { app: server, SQLLogAdapter } = require("../server");
 let should = chai.should();
-
-const SQLLogAdapter = require("../app/sec_adapters/logs");
 
 chai.use(chaiHttp);
 
@@ -13,7 +11,6 @@ const LOGGING = false;
 
 describe("Logs", () => {
   beforeEach(async (done) => {
-    // TODO: have a test init that will initialize the server, so we can manipulate the logAdapter directly
     await SQLLogAdapter.deleteAll();
     done();
   });

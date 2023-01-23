@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const LogContext = require("./app/domain/log.js");
 const SQLLogAdapter = require("./app/sec_adapters/logs");
+const initLogRoutes = require("./app/pri_adapters/rest/log");
 
 const corsOptions = {
   origin: "http://localhost:8081",
@@ -19,12 +20,11 @@ app.use(express.urlencoded({ extended: true }));
 // TODO: const sqlLogAdapter = new SQLLogAdapter();
 const sqlLogAdapter = SQLLogAdapter;
 const logContext = new LogContext(sqlLogAdapter);
-
-// TODO: call it as const
-require("./app/pri_adapters/rest/log")(app, logContext);
+initLogRoutes(app, logContext);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}.`);
 });
 
-module.exports = app;
+// TODO: export sec adapters for test
+module.exports = { app, SQLLogAdapter };

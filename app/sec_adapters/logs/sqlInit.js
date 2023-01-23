@@ -4,7 +4,8 @@ const initSequelize = (config) => {
   const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     host: config.HOST,
     dialect: config.dialect,
-    operatorsAliases: false,
+    // TODO: remove if no pb
+    // operatorsAliases: false,
 
     logging: false,
 
