@@ -20,11 +20,13 @@ app.use(express.urlencoded({ extended: true }));
 // TODO: const sqlLogAdapter = new SQLLogAdapter();
 const sqlLogAdapter = SQLLogAdapter;
 const logContext = new LogContext(sqlLogAdapter);
-initLogRoutes(app, logContext);
+const logRoutes = initLogRoutes(logContext);
+app.use("/api/logs", logRoutes);
+
+// initLogRoutes(app, logContext);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}.`);
 });
 
-// TODO: export sec adapters for test
 module.exports = { app, SQLLogAdapter };
